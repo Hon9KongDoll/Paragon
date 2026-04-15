@@ -1,4 +1,4 @@
-#include "Framework/Character/ParagonCharacter.h"
+#include "Character/ParagonCharacter.h"
 
 AParagonCharacter::AParagonCharacter()
 {
