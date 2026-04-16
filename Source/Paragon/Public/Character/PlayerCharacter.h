@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/ParagonCharacterBase.h"
+#include "InputActionValue.h"
 #include "PlayerCharacter.generated.h"
 
 class UInputAction;
@@ -22,11 +23,17 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void Look(const FInputActionValue& InputActionValue);
+
+private:
 	UPROPERTY(VisibleDefaultsOnly)
 	TObjectPtr<USpringArmComponent> SpringArm;
 
 	UPROPERTY(VisibleDefaultsOnly)
 	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UInputAction> IA_Look;
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UInputAction> IA_Jump;
