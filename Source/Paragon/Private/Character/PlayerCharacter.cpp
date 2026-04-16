@@ -1,8 +1,10 @@
 #include "Character/PlayerCharacter.h"
 
 //Engine
-#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "GameFramework/SpringArmComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -13,4 +15,35 @@ APlayerCharacter::APlayerCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+}
+
+void APlayerCharacter::PawnClientRestart()
+{
+	Super::PawnClientRestart();
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+
+		UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+
+		if (!EnhancedInputLocalPlayerSubsystem->HasMappingContext(IMC_PlayerCharacter))
+		{
+			EnhancedInputLocalPlayerSubsystem->AddMappingContext(IMC_PlayerCharacter, 0);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("APlayerCharacter::PawnClientRestart - PlayerController is nullptr."));
+	}
+}
+
+void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ThisClass::Jump);
+	}
 }
