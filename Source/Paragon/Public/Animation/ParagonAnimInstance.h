@@ -27,6 +27,12 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
 	FORCEINLINE bool GetIsNotMoving() const { return MoveSpeed == 0.f; }
 
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
+	FORCEINLINE float GetYawSpeed() const { return YawSpeed; }
+
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
+	FORCEINLINE float GetSmoothedYawSpeed() const { return SmoothedYawSpeed; }
+
 private:
 	UPROPERTY()
 	TObjectPtr<ACharacter> OwnerCharacter;
@@ -36,4 +42,17 @@ private:
 
 	UPROPERTY()
 	float MoveSpeed;
+
+	UPROPERTY()
+	float YawSpeed;
+
+	UPROPERTY()
+	float SmoothedYawSpeed;
+
+	// 控制平滑Yaw转向速度变化的插值速度
+	UPROPERTY()
+	float SmoothedYawSpeedInterpSpeed = 1.f;
+
+	UPROPERTY()
+	FRotator BodyPreviousRotation;
 };
