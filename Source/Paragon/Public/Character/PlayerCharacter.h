@@ -23,7 +23,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	FVector GetLookForwardDirection();
+
+	FVector GetLookRightDirection();
+
+	FVector GetMoveForwardDirection();
+
 	void Look(const FInputActionValue& InputActionValue);
+
+	void Move(const FInputActionValue& InputActionValue);
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -34,6 +42,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UInputAction> IA_Look;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UInputAction> IA_Move;
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UInputAction> IA_Jump;

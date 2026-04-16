@@ -5,6 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -18,6 +19,9 @@ APlayerCharacter::APlayerCharacter()
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 
 	bUseControllerRotationYaw = false;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 }
 
 void APlayerCharacter::PawnClientRestart()
@@ -48,8 +52,25 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ThisClass::Look);
+		EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ThisClass::Move);
 		EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ThisClass::Jump);
 	}
+}
+
+FVector APlayerCharacter::GetLookForwardDirection()
+{
+	return Camera->GetForwardVector();
+}
+
+FVector APlayerCharacter::GetLookRightDirection()
+{
+	return Camera->GetRightVector();
+}
+
+FVector APlayerCharacter::GetMoveForwardDirection()
+{
+	// CrossProduct 向量叉乘：两个向量做叉乘，得到一个同时垂直于它们的新向量
+	return FVector::CrossProduct(GetLookRightDirection(), FVector::UpVector);
 }
 
 void APlayerCharacter::Look(const FInputActionValue& InputActionValue)
@@ -58,4 +79,15 @@ void APlayerCharacter::Look(const FInputActionValue& InputActionValue)
 
 	AddControllerPitchInput(-Value.Y);
 	AddControllerYawInput(Value.X);
+}
+
+void APlayerCharacter::Move(const FInputActionValue& InputActionValue)
+{
+	FVector2D Value = InputActionValue.Get<FVector2D>();
+
+	// 不 Normalize 的问题：Value = (1, 1) 斜向移动，长度是 √2 ≈ 1.41，斜着走比直走更快
+	// Normalize 后：右上 (0.7,0.7)，长度统一，移动速度一致
+	Value.Normalize();
+
+	AddMovementInput(Value.Y * GetMoveForwardDirection() + Value.X * GetLookRightDirection());
 }
