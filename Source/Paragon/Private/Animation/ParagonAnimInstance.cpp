@@ -2,6 +2,7 @@
 
 //Engine
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UParagonAnimInstance::NativeInitializeAnimation()
 {
@@ -18,6 +19,11 @@ void UParagonAnimInstance::NativeInitializeAnimation()
 void UParagonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
+
+	if (OwnerCharacter)
+	{
+		MoveSpeed = OwnerCharacterMovement->Velocity.Length();
+	}
 }
 
 void UParagonAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
