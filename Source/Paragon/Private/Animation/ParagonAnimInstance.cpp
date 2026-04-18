@@ -40,6 +40,10 @@ void UParagonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		}
 
 		bIsJumping = OwnerCharacterMovement->IsFalling();
+
+		// 计算头部转向偏移
+		FRotator ControllerRotation = OwnerCharacter->GetBaseAimRotation();
+		LookRotationAimOffset = UKismetMathLibrary::NormalizedDeltaRotator(ControllerRotation, BodyRotation);
 	}
 }
 
