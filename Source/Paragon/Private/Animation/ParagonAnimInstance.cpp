@@ -21,7 +21,7 @@ void UParagonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (OwnerCharacter)
+	if (OwnerCharacter && OwnerCharacterMovement)
 	{
 		MoveSpeed = OwnerCharacterMovement->Velocity.Length();
 
@@ -38,6 +38,8 @@ void UParagonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 			SmoothedYawSpeed = FMath::FInterpTo(SmoothedYawSpeed, YawSpeed, DeltaSeconds, SmoothedYawSpeedInterpSpeed);
 		}
+
+		bIsJumping = OwnerCharacterMovement->IsFalling();
 	}
 }
 

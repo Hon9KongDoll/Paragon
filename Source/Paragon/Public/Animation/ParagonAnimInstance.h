@@ -33,12 +33,21 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
 	FORCEINLINE float GetSmoothedYawSpeed() const { return SmoothedYawSpeed; }
 
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
+	FORCEINLINE bool GetIsJumping() const { return bIsJumping; }
+
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
+	FORCEINLINE bool GetIsOnGround() const { return !bIsJumping; }
+
 private:
 	UPROPERTY()
 	TObjectPtr<ACharacter> OwnerCharacter;
 
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> OwnerCharacterMovement;
+
+	UPROPERTY()
+	bool bIsJumping;
 
 	UPROPERTY()
 	float MoveSpeed;
