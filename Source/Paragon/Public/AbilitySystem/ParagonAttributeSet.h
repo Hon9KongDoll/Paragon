@@ -17,19 +17,34 @@ class PARAGON_API UParagonAttributeSet : public UAttributeSet
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY()
+	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
+
+	UFUNCTION()
+	void OnRep_Health(const FGameplayAttributeData& OldHealth);
+
+	UFUNCTION()
+	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
+
+	UFUNCTION()
+	void OnRep_Mana(const FGameplayAttributeData& OldMana);
+
+	UFUNCTION()
+	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
+
+public:
+	UPROPERTY(ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UParagonAttributeSet, Health)
 
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_MaxHealth)
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UParagonAttributeSet, MaxHealth)
 
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_Mana)
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UParagonAttributeSet, Mana)
 
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_MaxMana)
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UParagonAttributeSet, MaxMana)
 };
