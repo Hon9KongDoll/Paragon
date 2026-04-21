@@ -12,7 +12,12 @@ class PARAGON_API UParagonAbilitySystemComponent : public UAbilitySystemComponen
 public:
 	void ApplyDefaultGameplayEffectToSelf();
 
+	void GiveDefaultGameplayAbilityToSelf();
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<UGameplayEffect>> DefaultGameplayEffects;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<UGameplayAbility>> DefaultGameplayAbilities;
 };

@@ -21,4 +21,6 @@ void AParagonCharacterBase::ServerSideInitializationASC()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	AbilitySystemComponent->ApplyDefaultGameplayEffectToSelf();
+
+	AbilitySystemComponent->GiveDefaultGameplayAbilityToSelf();
 }

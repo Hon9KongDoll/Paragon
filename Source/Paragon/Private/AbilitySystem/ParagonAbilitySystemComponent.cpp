@@ -14,3 +14,16 @@ void UParagonAbilitySystemComponent::ApplyDefaultGameplayEffectToSelf()
 		}
 	}
 }
+
+void UParagonAbilitySystemComponent::GiveDefaultGameplayAbilityToSelf()
+{
+	if (GetOwner()->HasAuthority())
+	{
+		for (const TSubclassOf<UGameplayAbility>& GameplayAbilityClass : DefaultGameplayAbilities)
+		{
+			FGameplayAbilitySpec GameplayAbilitySpec = FGameplayAbilitySpec(GameplayAbilityClass, 1);
+
+			GiveAbility(GameplayAbilitySpec);
+		}
+	}
+}
