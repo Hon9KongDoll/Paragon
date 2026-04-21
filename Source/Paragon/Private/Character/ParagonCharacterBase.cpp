@@ -1,6 +1,4 @@
 #include "Character/ParagonCharacterBase.h"
-#include "AbilitySystem/ParagonAttributeSet.h"
-#include "AbilitySystem/ParagonAbilitySystemComponent.h"
 
 AParagonCharacterBase::AParagonCharacterBase()
 {
@@ -11,4 +9,16 @@ AParagonCharacterBase::AParagonCharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UParagonAbilitySystemComponent>("AbilitySystemComponent");
 
 	AttributeSet = CreateDefaultSubobject<UParagonAttributeSet>("AttributeSet");
+}
+
+void AParagonCharacterBase::ClientSideInitializationASC()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+}
+
+void AParagonCharacterBase::ServerSideInitializationASC()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	AbilitySystemComponent->ApplyDefaultGameplayEffectToSelf();
 }

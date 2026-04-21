@@ -2,12 +2,15 @@
 
 void UParagonAbilitySystemComponent::ApplyDefaultGameplayEffectToSelf()
 {
-	for (const TSubclassOf<UGameplayEffect>& GameplayEffectClass : DefaultGameplayEffects)
+	if (GetOwner()->HasAuthority())
 	{
-		const FGameplayEffectContextHandle EffectContextHandle = MakeEffectContext();
+		for (const TSubclassOf<UGameplayEffect>& GameplayEffectClass : DefaultGameplayEffects)
+		{
+			const FGameplayEffectContextHandle EffectContextHandle = MakeEffectContext();
 
-		const FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+			const FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
 
-		ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+			ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		}
 	}
 }

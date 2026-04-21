@@ -3,10 +3,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "AbilitySystem/ParagonAttributeSet.h"
+#include "AbilitySystem/ParagonAbilitySystemComponent.h"
 #include "ParagonCharacterBase.generated.h"
-
-class UAttributeSet;
-class UAbilitySystemComponent;
 
 UCLASS()
 class PARAGON_API AParagonCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -23,12 +22,15 @@ public:
 
 	virtual UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+	void ClientSideInitializationASC();
+	void ServerSideInitializationASC();
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UParagonAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY();
-	TObjectPtr<UAttributeSet> AttributeSet;
+	TObjectPtr<UParagonAttributeSet> AttributeSet;
 
 	//@}
 };
