@@ -19,9 +19,9 @@ void UParagonAbilitySystemComponent::GiveDefaultGameplayAbilityToSelf()
 {
 	if (GetOwner()->HasAuthority())
 	{
-		for (const TSubclassOf<UGameplayAbility>& GameplayAbilityClass : DefaultGameplayAbilities)
+		for (const TPair<EGameplayAbilityInputID, TSubclassOf<UGameplayAbility>>& Pair : DefaultGameplayAbilities)
 		{
-			FGameplayAbilitySpec GameplayAbilitySpec = FGameplayAbilitySpec(GameplayAbilityClass, 1);
+			FGameplayAbilitySpec GameplayAbilitySpec = FGameplayAbilitySpec(Pair.Value, 1, (int32)Pair.Key);
 
 			GiveAbility(GameplayAbilitySpec);
 		}

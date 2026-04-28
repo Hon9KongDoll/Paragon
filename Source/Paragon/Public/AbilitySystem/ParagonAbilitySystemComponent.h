@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "ParagonEnum.h"
 #include "ParagonAbilitySystemComponent.generated.h"
 
 UCLASS()
@@ -19,5 +20,5 @@ protected:
 	TArray<TSubclassOf<UGameplayEffect>> DefaultGameplayEffects;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<TSubclassOf<UGameplayAbility>> DefaultGameplayAbilities;
+	TMap<EGameplayAbilityInputID, TSubclassOf<UGameplayAbility>> DefaultGameplayAbilities;
 };
