@@ -1,7 +1,14 @@
 #include "AbilitySystem/GameplayAbility/ComboGameplayAbility.h"
+#include "ParagonGameplayTag.h"
 
 //Engine
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+
+UComboGameplayAbility::UComboGameplayAbility()
+{
+	AbilityTags.AddTag(PargonGameplayAbilityTag::Ability_BasicAttack);
+	BlockAbilitiesWithTag.AddTag(PargonGameplayAbilityTag::Ability_BasicAttack);
+}
 
 void UComboGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo,
