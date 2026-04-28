@@ -1,12 +1,15 @@
 #include "AbilitySystem/GameplayAbility/ComboGameplayAbility.h"
 
-void UComboGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UComboGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+	if (!K2_CommitAbility())
 	{
-		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		K2_EndAbility();
 
 		return;
 	}
