@@ -7,9 +7,13 @@ class PARAGON_API UComboGameplayAbility : public UParagonGameplayAbility
 {
 	GENERATED_BODY()
 	
+protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
+private:
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimMontage> ComboMontage;
 };
