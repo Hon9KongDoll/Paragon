@@ -17,6 +17,12 @@ protected:
 		const FGameplayEventData* TriggerEventData) override;
 
 private:
+	UFUNCTION()
+	void HandleWaitGameplayEvent(FGameplayEventData Payload);
+
+private:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAnimMontage> ComboMontage;
+
+	FName NextComboName;
 };

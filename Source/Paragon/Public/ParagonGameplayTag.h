@@ -9,9 +9,9 @@ namespace PargonGameplayAbilityTag
 
 namespace PargonGameplayEventTag
 {
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_End)
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo01)
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo02)
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo03)
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo04)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_End)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_Combo01)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_Combo02)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_Combo03)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_Combo04)
 }
