@@ -6,3 +6,12 @@ namespace PargonGameplayAbilityTag
 {
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_BasicAttack)
 }
+
+namespace PargonGameplayEventTag
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_End)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo01)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo02)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo03)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_ComboChange_Combo04)
+}
