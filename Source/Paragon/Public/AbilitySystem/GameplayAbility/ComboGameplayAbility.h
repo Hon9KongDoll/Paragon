@@ -20,6 +20,10 @@ private:
 	UFUNCTION()
 	void HandleWaitGameplayEvent(FGameplayEventData Payload);
 
+	void SetupAbilityTaskWaitInputPress();
+	UFUNCTION()
+	void HandleAbilityTaskWaitInputPress(float TimeWaited);
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAnimMontage> ComboMontage;

@@ -3,6 +3,7 @@
 
 //Engine
 #include "GameplayTagsManager.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
@@ -42,6 +43,8 @@ void UComboGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		AbilityTask_WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::HandleWaitGameplayEvent);
 		AbilityTask_WaitGameplayEvent->ReadyForActivation();
 	}
+
+	SetupAbilityTaskWaitInputPress();
 }
 
 void UComboGameplayAbility::HandleWaitGameplayEvent(FGameplayEventData Payload)
@@ -55,4 +58,23 @@ void UComboGameplayAbility::HandleWaitGameplayEvent(FGameplayEventData Payload)
 	TArray<FName> TagNames;
 	UGameplayTagsManager::Get().SplitGameplayTagFName(Payload.EventTag, TagNames);
 	NextComboName = TagNames.Last();
+}
+
+void UComboGameplayAbility::SetupAbilityTaskWaitInputPress()
+{
+	UAbilityTask_WaitInputPress* AbilityTaskWaitInputPress = UAbilityTask_WaitInputPress::WaitInputPress(this);
+	AbilityTaskWaitInputPress->OnPress.AddDynamic(this, &ThisClass::HandleAbilityTaskWaitInputPress);
+	AbilityTaskWaitInputPress->ReadyForActivation();
+}
+
+void UComboGameplayAbility::HandleAbilityTaskWaitInputPress(float TimeWaited)
+{
+	SetupAbilityTaskWaitInputPress();
+
+	if (NextComboName == NAME_None) return;
+
+	if (UAnimInstance* AnimInstance = GetOwnerAnimInstance())
+	{	
+		AnimInstance->Montage_SetNextSection(AnimInstance->Montage_GetCurrentSection(ComboMontage), NextComboName, ComboMontage);
+	}
 }
