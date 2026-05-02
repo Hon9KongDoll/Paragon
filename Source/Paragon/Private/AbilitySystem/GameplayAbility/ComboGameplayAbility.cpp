@@ -3,6 +3,7 @@
 
 //Engine
 #include "GameplayTagsManager.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -40,14 +41,22 @@ void UComboGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
 
 		UAbilityTask_WaitGameplayEvent* AbilityTask_WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this, FGameplayTag::RequestGameplayTag("GameplayEvent.ComboChange"), nullptr, false, false);
-		AbilityTask_WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::HandleWaitGameplayEvent);
+		AbilityTask_WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::HandleComboChange);
+		AbilityTask_WaitGameplayEvent->ReadyForActivation();
+	}
+
+	if (K2_HasAuthority())
+	{
+		UAbilityTask_WaitGameplayEvent* AbilityTask_WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+			this, FGameplayTag::RequestGameplayTag("GameplayEvent.HitDetection"), nullptr, false, true);
+		AbilityTask_WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::HandleHitDetectionAndDamage);
 		AbilityTask_WaitGameplayEvent->ReadyForActivation();
 	}
 
 	SetupAbilityTaskWaitInputPress();
 }
 
-void UComboGameplayAbility::HandleWaitGameplayEvent(FGameplayEventData Payload)
+void UComboGameplayAbility::HandleComboChange(FGameplayEventData Payload)
 {
 	if (Payload.EventTag == FGameplayTag::RequestGameplayTag("GameplayEvent.ComboChange.End"))
 	{
@@ -58,6 +67,29 @@ void UComboGameplayAbility::HandleWaitGameplayEvent(FGameplayEventData Payload)
 	TArray<FName> TagNames;
 	UGameplayTagsManager::Get().SplitGameplayTagFName(Payload.EventTag, TagNames);
 	NextComboName = TagNames.Last();
+}
+
+void UComboGameplayAbility::HandleHitDetectionAndDamage(FGameplayEventData Payload)
+{
+	if (!K2_HasAuthority()) return;
+
+	const FGameplayAbilityTargetDataHandle& TargetDataHandle = Payload.TargetData;
+
+	TArray<FHitResult> OutHitResult;
+
+	for (const TSharedPtr<FGameplayAbilityTargetData> TargetData : TargetDataHandle.Data)
+	{
+		FVector StartLocation = TargetData->GetOrigin().GetTranslation();
+		FVector EndLocation = TargetData->GetEndPoint();
+
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+
+		TArray<AActor*> ActorsToIgnore;
+		ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
+
+		UKismetSystemLibrary::SphereTraceMultiForObjects(this, StartLocation, EndLocation, 30.f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHitResult, true);
+	}
 }
 
 void UComboGameplayAbility::SetupAbilityTaskWaitInputPress()

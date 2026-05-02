@@ -9,6 +9,8 @@ namespace PargonGameplayAbilityTag
 
 namespace PargonGameplayEventTag
 {
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_HitDetection)
+
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_End)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_Combo01)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_ComboChange_Combo02)

@@ -18,7 +18,10 @@ protected:
 
 private:
 	UFUNCTION()
-	void HandleWaitGameplayEvent(FGameplayEventData Payload);
+	void HandleComboChange(FGameplayEventData Payload);
+
+	UFUNCTION()
+	void HandleHitDetectionAndDamage(FGameplayEventData Payload);
 
 	void SetupAbilityTaskWaitInputPress();
 	UFUNCTION()
