@@ -24,12 +24,21 @@ private:
 	void HandleHitDetectionAndDamage(FGameplayEventData Payload);
 
 	void SetupAbilityTaskWaitInputPress();
+
 	UFUNCTION()
 	void HandleAbilityTaskWaitInputPress(float TimeWaited);
 
+	TSubclassOf<UGameplayEffect> GetDamageGameplayEffectForCurrentCombo();
+
 private:
+	FName NextComboName;
+
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAnimMontage> ComboMontage;
 
-	FName NextComboName;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> DefaultComboDamageGE;
+
+	UPROPERTY(EditDefaultsOnly)
+	TMap<FName, TSubclassOf<UGameplayEffect>> ComboDamageGE;
 };

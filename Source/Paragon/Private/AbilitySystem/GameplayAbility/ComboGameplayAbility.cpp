@@ -4,6 +4,7 @@
 //Engine
 #include "GameplayTagsManager.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -75,7 +76,8 @@ void UComboGameplayAbility::HandleHitDetectionAndDamage(FGameplayEventData Paylo
 
 	const FGameplayAbilityTargetDataHandle& TargetDataHandle = Payload.TargetData;
 
-	TArray<FHitResult> OutHitResult;
+	TSet<AActor*> Actors;
+	TArray<FHitResult> HitResults;
 
 	for (const TSharedPtr<FGameplayAbilityTargetData> TargetData : TargetDataHandle.Data)
 	{
@@ -88,7 +90,28 @@ void UComboGameplayAbility::HandleHitDetectionAndDamage(FGameplayEventData Paylo
 		TArray<AActor*> ActorsToIgnore;
 		ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
 
+		TArray<FHitResult> OutHitResult;
 		UKismetSystemLibrary::SphereTraceMultiForObjects(this, StartLocation, EndLocation, 30.f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHitResult, true);
+
+		for (const FHitResult& HitResult : OutHitResult)
+		{
+			if (Actors.Contains(HitResult.GetActor()))
+			{
+				continue;
+			}
+
+			Actors.Add(HitResult.GetActor());
+			HitResults.Add(HitResult);
+		}
+	}
+
+	TSubclassOf<UGameplayEffect> GameplayEffect = GetDamageGameplayEffectForCurrentCombo();
+
+	for (const FHitResult& HitResult : HitResults)
+	{
+		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(GameplayEffect, GetAbilityLevel(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo()));
+
+		ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(), CurrentActorInfo, GetCurrentActivationInfo(), EffectSpecHandle, UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(HitResult.GetActor()));
 	}
 }
 
@@ -109,4 +132,19 @@ void UComboGameplayAbility::HandleAbilityTaskWaitInputPress(float TimeWaited)
 	{	
 		AnimInstance->Montage_SetNextSection(AnimInstance->Montage_GetCurrentSection(ComboMontage), NextComboName, ComboMontage);
 	}
+}
+
+TSubclassOf<UGameplayEffect> UComboGameplayAbility::GetDamageGameplayEffectForCurrentCombo()
+{
+	if (UAnimInstance* AnimInstance = GetOwnerAnimInstance())
+	{
+		const FName Section = AnimInstance->Montage_GetCurrentSection(ComboMontage);
+
+		if (TSubclassOf<UGameplayEffect>* GameplayEffect = ComboDamageGE.Find(Section))
+		{
+			return *GameplayEffect;
+		}
+	}
+
+	return DefaultComboDamageGE;
 }
