@@ -19,6 +19,8 @@ class PARAGON_API UParagonAttributeSet : public UAttributeSet
 public:
 	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
 
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth);
 
